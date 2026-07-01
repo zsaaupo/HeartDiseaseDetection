@@ -2,8 +2,12 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import include, path
+from django.views.generic import RedirectView
+
+favicon_url = f"/{settings.STATIC_URL.lstrip('/')}img/favicon.svg"
 
 urlpatterns = [
+    path("favicon.ico", RedirectView.as_view(url=favicon_url, permanent=True)),
     path("admin/", admin.site.urls),
     path("", include("dashboard.urls")),
     path("predict/", include("prediction.urls")),
