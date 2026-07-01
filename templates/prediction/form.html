@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}New Prediction · CardioPredict{% endblock %}
+
+{% block content %}
+
+<div class="cp-page-header">
+  <div>
+    <div class="cp-eyebrow">New Prediction</div>
+    <h1 class="display-heading mb-1">Patient Assessment Form</h1>
+    <p class="text-muted mb-0">Enter the clinical values below. All fields are required.</p>
+  </div>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-lg-9">
+    <div class="cp-form-card">
+      <form method="post" novalidate id="predictionForm">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <div class="row g-4">
+
+          <div class="col-md-4">
+            <label class="form-label" for="{{ form.age.id_for_label }}">Age (years)</label>
+            {{ form.age }}
+            {% for error in form.age.errors %}<div class="cp-field-error">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label" for="{{ form.sex.id_for_label }}">Sex</label>
+            {{ form.sex }}
+            {% for error in form.sex.errors %}<div class="cp-field-error">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label" for="{{ form.chest_pain_type.id_for_label }}">Chest Pain Type</label>
+            {{ form.chest_pain_type }}
+            {% for error in form.chest_pain_type.errors %}<div class="cp-field-error">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label" for="{{ form.resting_ecg.id_for_label }}">Resting ECG Result</label>
+            {{ form.resting_ecg }}
+            {% for error in form.resting_ecg.errors %}<div class="cp-field-error">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label" for="{{ form.max_heart_rate.id_for_label }}">Max Heart Rate Achieved</label>
+            {{ form.max_heart_rate }}
+            {% for error in form.max_heart_rate.errors %}<div class="cp-field-error">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label" for="{{ form.exercise_induced_angina.id_for_label }}">Exercise Induced Angina</label>
+            {{ form.exercise_induced_angina }}
+            {% for error in form.exercise_induced_angina.errors %}<div class="cp-field-error">{{ error }}</div>{% endfor %}
+          </div>
+
+          <hr class="cp-section-divider my-0 d-none d-md-block">
+
+          <div class="col-md-4">
+            <label class="form-label" for="{{ form.st_depression.id_for_label }}">ST Depression (Oldpeak)</label>
+            {{ form.st_depression }}
+            {% for error in form.st_depression.errors %}<div class="cp-field-error">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label" for="{{ form.st_slope.id_for_label }}">ST Slope</label>
+            {{ form.st_slope }}
+            {% for error in form.st_slope.errors %}<div class="cp-field-error">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label" for="{{ form.major_vessels.id_for_label }}">Number of Major Vessels</label>
+            {{ form.major_vessels }}
+            {% for error in form.major_vessels.errors %}<div class="cp-field-error">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label" for="{{ form.thalassemia.id_for_label }}">Thalassemia</label>
+            {{ form.thalassemia }}
+            {% for error in form.thalassemia.errors %}<div class="cp-field-error">{{ error }}</div>{% endfor %}
+          </div>
+
+        </div>
+
+        <hr class="cp-section-divider">
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <a href="{% url 'dashboard:dashboard' %}" class="btn btn-cp-outline">
+            <i class="bi bi-arrow-left me-1"></i>Cancel
+          </a>
+          <button type="submit" class="btn btn-cp-primary btn-lg px-4">
+            <i class="bi bi-heart-pulse-fill me-2"></i>Predict
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  // Lightweight client-side validation pass before submit (server-side
+  // validation in HeartDiseasePredictionForm is the source of truth).
+  document.getElementById('predictionForm').addEventListener('submit', function (e) {
+    let valid = true;
+    this.querySelectorAll('[required], input, select').forEach(function (el) {
+      if (el.hasAttribute('required') && !el.value) {
+        valid = false;
+        el.classList.add('is-invalid');
+      } else {
+        el.classList.remove('is-invalid');
+      }
+    });
+    if (!valid) e.preventDefault();
+  });
+</script>
+{% endblock %}

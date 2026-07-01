@@ -1,0 +1,373 @@
+/* =========================================================================
+   CardioPredict — design tokens & shared styles
+   A clinical-but-warm visual identity: deep pine/teal as the trusted
+   "clinical" color, a warm ember accent standing in for the pulse/heartbeat,
+   a serif display face for moments of emphasis (big numbers, page titles)
+   paired with Inter for everything functional.
+   ========================================================================= */
+
+:root {
+  /* Color */
+  --bg: #f5f8f7;
+  --surface: #ffffff;
+  --surface-alt: #eef4f2;
+  --primary: #103f3f;
+  --primary-light: #1c6f6a;
+  --primary-dark: #0a2b2b;
+  --accent: #e2602f;
+  --accent-dark: #b94a22;
+  --accent-soft: #fbe7dd;
+  --text: #16221f;
+  --text-muted: #5c6e6b;
+  --border: #dde7e4;
+
+  --low: #2f8f5b;
+  --low-bg: #e7f5ed;
+  --medium: #b9821a;
+  --medium-bg: #fbf1da;
+  --high: #c1413a;
+  --high-bg: #fbe8e6;
+
+  /* Type */
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+
+  /* Layout */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --shadow-card: 0 1px 2px rgba(16, 63, 63, 0.06), 0 8px 24px -12px rgba(16, 63, 63, 0.18);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-feature-settings: "ss01" 1;
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-display { font-family: var(--font-display); }
+
+h1, h2, h3, .display-heading {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--primary-dark);
+}
+
+a { color: var(--primary-light); }
+a:hover { color: var(--accent); }
+
+/* ----------------------------- Navbar ---------------------------------- */
+.cp-navbar {
+  background: var(--primary-dark);
+  border-bottom: 3px solid transparent;
+  border-image: linear-gradient(90deg, var(--primary-light), var(--accent) 50%, var(--primary-light)) 1;
+  position: relative;
+}
+
+.cp-navbar::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -3px;
+  height: 3px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 12'%3E%3Cpolyline points='0,6 60,6 70,1 78,11 86,2 94,6 200,6' fill='none' stroke='%23e2602f' stroke-width='1.4'/%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  background-size: 200px 12px;
+  opacity: 0.9;
+}
+
+.cp-brand {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.35rem;
+  color: #fff !important;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cp-brand svg { flex-shrink: 0; }
+
+.cp-navbar .nav-link {
+  color: rgba(255,255,255,0.78) !important;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+.cp-navbar .nav-link.active,
+.cp-navbar .nav-link:hover {
+  color: #fff !important;
+}
+
+/* ----------------------------- Buttons ---------------------------------- */
+.btn-cp-primary {
+  background: var(--accent);
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1.75rem;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+.btn-cp-primary:hover { background: var(--accent-dark); color: #fff; transform: translateY(-1px); }
+.btn-cp-primary:active { transform: translateY(0); }
+
+.btn-cp-outline {
+  background: transparent;
+  border: 1.5px solid var(--primary);
+  color: var(--primary-dark);
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  padding: 0.7rem 1.65rem;
+}
+.btn-cp-outline:hover { background: var(--primary-dark); color: #fff; border-color: var(--primary-dark); }
+
+/* ----------------------------- Cards ------------------------------------ */
+.cp-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+.cp-stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.6rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.cp-stat-card .cp-stat-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.cp-stat-card .cp-stat-value {
+  font-family: var(--font-display);
+  font-size: 2.6rem;
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--primary-dark);
+  margin-top: 0.35rem;
+}
+
+.cp-stat-card.accent-total .cp-stat-value { color: var(--primary); }
+.cp-stat-card.accent-positive .cp-stat-value { color: var(--high); }
+.cp-stat-card.accent-negative .cp-stat-value { color: var(--low); }
+
+.cp-stat-icon {
+  position: absolute;
+  top: 1.4rem; right: 1.4rem;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--surface-alt);
+  color: var(--primary);
+}
+
+/* ----------------------------- Dashboard header -------------------------- */
+.cp-page-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.75rem;
+}
+
+.cp-page-header .cp-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent-dark);
+}
+
+/* ----------------------------- Tables ------------------------------------ */
+.cp-table thead th {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-alt);
+}
+.cp-table tbody td {
+  vertical-align: middle;
+  font-size: 0.92rem;
+  border-bottom: 1px solid var(--border);
+}
+.cp-table tbody tr:last-child td { border-bottom: none; }
+
+.cp-badge {
+  display: inline-block;
+  padding: 0.3em 0.7em;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+.cp-badge-positive { background: var(--high-bg); color: var(--high); }
+.cp-badge-negative { background: var(--low-bg); color: var(--low); }
+
+.cp-risk-pill { display: inline-flex; align-items: center; gap: 0.4em; padding: 0.3em 0.75em; border-radius: 999px; font-size: 0.78rem; font-weight: 700; }
+.cp-risk-pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.cp-risk-low { background: var(--low-bg); color: var(--low); }
+.cp-risk-medium { background: var(--medium-bg); color: var(--medium); }
+.cp-risk-high { background: var(--high-bg); color: var(--high); }
+
+/* ----------------------------- Forms ------------------------------------- */
+.cp-form-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 2.25rem;
+}
+
+.cp-form-card .form-label {
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--primary-dark);
+  margin-bottom: 0.35rem;
+}
+
+.form-control, .form-select {
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 0.85rem;
+}
+.form-control:focus, .form-select:focus {
+  border-color: var(--primary-light);
+  box-shadow: 0 0 0 0.2rem rgba(28, 111, 106, 0.15);
+}
+
+.cp-field-error {
+  color: var(--high);
+  font-size: 0.82rem;
+  margin-top: 0.25rem;
+}
+
+.cp-section-divider {
+  border: none;
+  height: 1px;
+  background: var(--border);
+  margin: 1.75rem 0;
+}
+
+/* ----------------------------- Result page -------------------------------- */
+.cp-result-hero {
+  border-radius: var(--radius-lg);
+  padding: 2.75rem;
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+}
+.cp-result-hero.risk-low { background: linear-gradient(135deg, #1b6e4d, #2f8f5b); }
+.cp-result-hero.risk-medium { background: linear-gradient(135deg, #9c6c14, #c1922c); }
+.cp-result-hero.risk-high { background: linear-gradient(135deg, #8e2c27, #c1413a); }
+
+.cp-result-hero .cp-pulse-bg {
+  position: absolute;
+  inset: 0;
+  opacity: 0.16;
+  background-repeat: repeat-x;
+  background-size: 340px 60px;
+  background-position: center;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 340 60'%3E%3Cpolyline points='0,30 110,30 125,5 140,55 155,30 340,30' fill='none' stroke='white' stroke-width='2.5'/%3E%3C/svg%3E");
+}
+
+.cp-result-label {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.78rem;
+  font-weight: 700;
+  opacity: 0.85;
+}
+
+.cp-result-headline {
+  font-family: var(--font-display);
+  font-size: 2.1rem;
+  font-weight: 600;
+  margin-top: 0.4rem;
+}
+
+.cp-prob-ring {
+  width: 132px;
+  height: 132px;
+}
+
+.cp-metric-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.4rem;
+}
+.cp-metric-card .cp-metric-label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.cp-metric-card .cp-metric-value {
+  font-family: var(--font-mono);
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--primary-dark);
+}
+
+.cp-recommendation {
+  background: var(--surface-alt);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius-sm);
+  padding: 1.1rem 1.3rem;
+  font-size: 0.96rem;
+  color: var(--text);
+}
+
+/* ----------------------------- Chart cards -------------------------------- */
+.cp-chart-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 1.5rem;
+}
+.cp-chart-card h6 {
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--primary-dark);
+  margin-bottom: 1rem;
+}
+
+/* ----------------------------- Empty state -------------------------------- */
+.cp-empty-state {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  color: var(--text-muted);
+}
+.cp-empty-state svg { opacity: 0.5; margin-bottom: 1rem; }
+
+/* ----------------------------- Footer -------------------------------- */
+.cp-footer {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  padding: 2rem 0 1.5rem;
+}
+
+@media (max-width: 576px) {
+  .cp-form-card { padding: 1.4rem; }
+  .cp-result-hero { padding: 1.8rem; }
+  .cp-stat-card .cp-stat-value { font-size: 2.1rem; }
+}

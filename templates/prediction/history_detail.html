@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Prediction Detail · CardioPredict{% endblock %}
+
+{% block content %}
+
+<div class="cp-page-header">
+  <div>
+    <div class="cp-eyebrow">History</div>
+    <h1 class="display-heading mb-1">Prediction #{{ record.pk }}</h1>
+    <p class="text-muted mb-0">Recorded {{ record.created_at|date:"Y-m-d H:i" }}</p>
+  </div>
+  <a href="{% url 'dashboard:dashboard' %}" class="btn btn-cp-outline">
+    <i class="bi bi-arrow-left me-1"></i>Back to Dashboard
+  </a>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-5">
+    <div class="cp-card p-4 h-100">
+      <h6 class="fw-bold mb-3" style="color: var(--primary-dark);">Outcome</h6>
+
+      <div class="mb-3">
+        <div class="text-muted small mb-1">Prediction</div>
+        {% if record.prediction == 1 %}
+          <span class="cp-badge cp-badge-positive fs-6">Heart Disease Detected</span>
+        {% else %}
+          <span class="cp-badge cp-badge-negative fs-6">No Heart Disease Detected</span>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        <div class="text-muted small mb-1">Prediction Probability</div>
+        <div class="font-monospace fs-5">{{ record.probability_percent }}</div>
+      </div>
+
+      <div class="mb-0">
+        <div class="text-muted small mb-1">Risk Level</div>
+        {% if record.risk_level == "Low" %}
+          <span class="cp-risk-pill cp-risk-low">Low</span>
+        {% elif record.risk_level == "Medium" %}
+          <span class="cp-risk-pill cp-risk-medium">Medium</span>
+        {% else %}
+          <span class="cp-risk-pill cp-risk-high">High</span>
+        {% endif %}
+      </div>
+
+      <hr class="cp-section-divider">
+
+      <form action="{% url 'prediction:history_delete' record.pk %}" method="post" onsubmit="return confirm('Delete this prediction record? This cannot be undone.');">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-danger w-100">
+          <i class="bi bi-trash3 me-1"></i>Delete Record
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-lg-7">
+    <div class="cp-card p-4 h-100">
+      <h6 class="fw-bold mb-3" style="color: var(--primary-dark);">Input Features</h6>
+      <table class="table cp-table mb-0">
+        <tbody>
+          <tr><td>Age</td><td class="text-end font-monospace">{{ record.age }}</td></tr>
+          <tr><td>Sex</td><td class="text-end">{{ record.get_sex_display }}</td></tr>
+          <tr><td>Chest Pain Type</td><td class="text-end">{{ record.get_chest_pain_type_display }}</td></tr>
+          <tr><td>Resting ECG</td><td class="text-end">{{ record.get_resting_ecg_display }}</td></tr>
+          <tr><td>Max Heart Rate Achieved</td><td class="text-end font-monospace">{{ record.max_heart_rate }}</td></tr>
+          <tr><td>Exercise Induced Angina</td><td class="text-end">{{ record.get_exercise_induced_angina_display }}</td></tr>
+          <tr><td>ST Depression (Oldpeak)</td><td class="text-end font-monospace">{{ record.st_depression }}</td></tr>
+          <tr><td>ST Slope</td><td class="text-end">{{ record.get_st_slope_display }}</td></tr>
+          <tr><td>Major Vessels</td><td class="text-end font-monospace">{{ record.major_vessels }}</td></tr>
+          <tr><td>Thalassemia</td><td class="text-end">{{ record.get_thalassemia_display }}</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

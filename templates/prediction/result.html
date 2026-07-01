@@ -1,0 +1,87 @@
+{% extends "base_minimal.html" %}
+
+{% block title %}Result · CardioPredict{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+
+    <div class="cp-result-hero risk-{{ record.risk_level|lower }} mb-4">
+      <div class="cp-pulse-bg"></div>
+      <div class="position-relative">
+        <div class="row align-items-center g-4">
+          <div class="col-md-8">
+            <div class="cp-result-label">Prediction Result</div>
+            <div class="cp-result-headline">{{ record.get_prediction_display_label }}</div>
+            <p class="mb-0 mt-2" style="opacity:0.92;">
+              {% if record.prediction == 1 %}
+                The model has identified clinical indicators consistent with heart disease.
+              {% else %}
+                The model did not find clinical indicators consistent with heart disease.
+              {% endif %}
+            </p>
+          </div>
+          <div class="col-md-4 text-md-end text-center">
+            <div class="d-inline-block bg-white bg-opacity-25 rounded-circle p-4">
+              <i class="bi bi-heart-pulse-fill" style="font-size: 3rem;"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+      <div class="col-md-6">
+        <div class="cp-metric-card h-100">
+          <div class="cp-metric-label">Prediction Probability</div>
+          <div class="cp-metric-value">{{ record.probability_percent }}</div>
+          <div class="progress mt-2" style="height: 8px;">
+            <div class="progress-bar" role="progressbar"
+                 style="width: {{ record.probability_percent }}; background-color:
+                   {% if record.risk_level == 'Low' %}var(--low)
+                   {% elif record.risk_level == 'Medium' %}var(--medium)
+                   {% else %}var(--high){% endif %};"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="cp-metric-card h-100">
+          <div class="cp-metric-label">Risk Level</div>
+          <div class="cp-metric-value">
+            {% if record.risk_level == "Low" %}
+              <span class="cp-risk-pill cp-risk-low" style="font-size:1rem;">Low Risk</span>
+            {% elif record.risk_level == "Medium" %}
+              <span class="cp-risk-pill cp-risk-medium" style="font-size:1rem;">Medium Risk</span>
+            {% else %}
+              <span class="cp-risk-pill cp-risk-high" style="font-size:1rem;">High Risk</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cp-recommendation mb-4">
+      <div class="fw-bold mb-1" style="color: var(--primary-dark);"><i class="bi bi-info-circle me-1"></i>Recommendation</div>
+      {% if record.risk_level == "Low" %}
+        Continue maintaining a heart-healthy lifestyle and attend routine check-ups.
+      {% elif record.risk_level == "Medium" %}
+        Please consider scheduling an appointment with a physician for further evaluation.
+      {% else %}
+        Please consult a cardiologist for further medical evaluation as soon as possible.
+      {% endif %}
+    </div>
+
+    <div class="d-flex justify-content-center gap-3 flex-wrap">
+      <a href="{% url 'prediction:form' %}" class="btn btn-cp-outline btn-lg px-4">
+        <i class="bi bi-arrow-repeat me-2"></i>Predict Again
+      </a>
+      <a href="{% url 'dashboard:dashboard' %}" class="btn btn-cp-primary btn-lg px-4">
+        <i class="bi bi-grid-1x2 me-2"></i>Go to Dashboard
+      </a>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

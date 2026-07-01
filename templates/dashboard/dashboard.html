@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Dashboard · CardioPredict{% endblock %}
+
+{% block content %}
+
+<div class="cp-page-header">
+  <div>
+    <div class="cp-eyebrow">Overview</div>
+    <h1 class="display-heading mb-1">Dashboard</h1>
+    <p class="text-muted mb-0">Live statistics from every prediction run through the model.</p>
+  </div>
+  <a href="{% url 'prediction:form' %}" class="btn btn-cp-primary btn-lg">
+    <i class="bi bi-heart-pulse-fill me-2"></i>Predict Heart Disease
+  </a>
+</div>
+
+<!-- Stat cards -->
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="cp-stat-card accent-total">
+      <div class="cp-stat-icon"><i class="bi bi-clipboard2-pulse"></i></div>
+      <div class="cp-stat-label">Total Predictions</div>
+      <div class="cp-stat-value">{{ total_predictions }}</div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="cp-stat-card accent-positive">
+      <div class="cp-stat-icon"><i class="bi bi-exclamation-triangle"></i></div>
+      <div class="cp-stat-label">Positive Predictions</div>
+      <div class="cp-stat-value">{{ positive_predictions }}</div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="cp-stat-card accent-negative">
+      <div class="cp-stat-icon"><i class="bi bi-shield-check"></i></div>
+      <div class="cp-stat-label">Negative Predictions</div>
+      <div class="cp-stat-value">{{ negative_predictions }}</div>
+    </div>
+  </div>
+</div>
+
+<!-- Charts -->
+<div class="row g-3 mb-4">
+  <div class="col-lg-4">
+    <div class="cp-chart-card h-100">
+      <h6>Prediction Outcomes</h6>
+      {% if total_predictions > 0 %}
+        <canvas id="outcomeChart" height="220"></canvas>
+      {% else %}
+        <div class="cp-empty-state py-4">
+          <i class="bi bi-pie-chart" style="font-size:2rem;"></i>
+          <p class="mb-0 mt-2">No data yet</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="cp-chart-card h-100">
+      <h6>Risk Level Breakdown</h6>
+      {% if total_predictions > 0 %}
+        <canvas id="riskChart" height="220"></canvas>
+      {% else %}
+        <div class="cp-empty-state py-4">
+          <i class="bi bi-bar-chart" style="font-size:2rem;"></i>
+          <p class="mb-0 mt-2">No data yet</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="cp-chart-card h-100">
+      <h6>Predictions Over Time</h6>
+      {% if total_predictions > 0 %}
+        <canvas id="trendChart" height="220"></canvas>
+      {% else %}
+        <div class="cp-empty-state py-4">
+          <i class="bi bi-graph-up" style="font-size:2rem;"></i>
+          <p class="mb-0 mt-2">No data yet</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- History -->
+<div class="cp-card p-4">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h6 class="mb-0 fw-bold" style="color: var(--primary-dark);">Recent Prediction History</h6>
+    <span class="text-muted small">Showing latest {{ recent_records|length }} record{{ recent_records|length|pluralize }}</span>
+  </div>
+
+  {% if recent_records %}
+  <div class="table-responsive">
+    <table class="table cp-table mb-0">
+      <thead>
+        <tr>
+          <th>Date &amp; Time</th>
+          <th>Age</th>
+          <th>Sex</th>
+          <th>Prediction</th>
+          <th>Probability</th>
+          <th>Risk Level</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for record in recent_records %}
+        <tr>
+          <td class="font-monospace small">{{ record.created_at|date:"Y-m-d H:i" }}</td>
+          <td>{{ record.age }}</td>
+          <td>{{ record.get_sex_display }}</td>
+          <td>
+            {% if record.prediction == 1 %}
+              <span class="cp-badge cp-badge-positive">Positive</span>
+            {% else %}
+              <span class="cp-badge cp-badge-negative">Negative</span>
+            {% endif %}
+          </td>
+          <td class="font-monospace">{{ record.probability_percent }}</td>
+          <td>
+            {% if record.risk_level == "Low" %}
+              <span class="cp-risk-pill cp-risk-low">Low</span>
+            {% elif record.risk_level == "Medium" %}
+              <span class="cp-risk-pill cp-risk-medium">Medium</span>
+            {% else %}
+              <span class="cp-risk-pill cp-risk-high">High</span>
+            {% endif %}
+          </td>
+          <td class="text-end">
+            <a href="{% url 'prediction:history_detail' record.pk %}" class="btn btn-sm btn-outline-secondary" title="View details">
+              <i class="bi bi-eye"></i>
+            </a>
+            <form action="{% url 'prediction:history_delete' record.pk %}" method="post" class="d-inline" onsubmit="return confirm('Delete this prediction record? This cannot be undone.');">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete record">
+                <i class="bi bi-trash3"></i>
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <div class="cp-empty-state">
+      <i class="bi bi-clipboard2-pulse" style="font-size:2.5rem;"></i>
+      <h6 class="mt-2 mb-1">No predictions yet</h6>
+      <p class="mb-3">Run your first prediction to start building history.</p>
+      <a href="{% url 'prediction:form' %}" class="btn btn-cp-primary"><i class="bi bi-heart-pulse-fill me-1"></i>Predict Heart Disease</a>
+    </div>
+  {% endif %}
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+{% if total_predictions > 0 %}
+<script>
+  const outcomeData = {{ outcome_chart_json|safe }};
+  const riskData = {{ risk_chart_json|safe }};
+  const trendData = {{ trend_chart_json|safe }};
+
+  const palette = {
+    primary: '#1c6f6a',
+    accent: '#e2602f',
+    low: '#2f8f5b',
+    medium: '#b9821a',
+    high: '#c1413a',
+    muted: '#5c6e6b',
+  };
+
+  new Chart(document.getElementById('outcomeChart'), {
+    type: 'doughnut',
+    data: {
+      labels: outcomeData.labels,
+      datasets: [{
+        data: outcomeData.values,
+        backgroundColor: [palette.high, palette.low],
+        borderWidth: 0,
+      }]
+    },
+    options: {
+      plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 11 } } } },
+      cutout: '65%',
+    }
+  });
+
+  new Chart(document.getElementById('riskChart'), {
+    type: 'bar',
+    data: {
+      labels: riskData.labels,
+      datasets: [{
+        data: riskData.values,
+        backgroundColor: [palette.low, palette.medium, palette.high],
+        borderRadius: 6,
+        maxBarThickness: 46,
+      }]
+    },
+    options: {
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, ticks: { precision: 0 } } },
+    }
+  });
+
+  new Chart(document.getElementById('trendChart'), {
+    type: 'line',
+    data: {
+      labels: trendData.labels,
+      datasets: [{
+        data: trendData.values,
+        borderColor: palette.primary,
+        backgroundColor: 'rgba(28,111,106,0.12)',
+        fill: true,
+        tension: 0.35,
+        pointRadius: 3,
+        pointBackgroundColor: palette.accent,
+      }]
+    },
+    options: {
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, ticks: { precision: 0 } } },
+    }
+  });
+</script>
+{% endif %}
+{% endblock %}

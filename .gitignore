@@ -8,5 +8,4 @@ env/
 .idea/
 __pycache__/
 
-PROJECT_DOCUMENTATION.md
-PROJECT_IMPROVEMENTS.md
+.env
