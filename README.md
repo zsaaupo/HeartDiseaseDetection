@@ -9,6 +9,16 @@ result page, and full prediction history.
 
 ## 1. Quick Start
 
+### Live
+
+Open the deployed app here:
+
+[**LIVE**](https://heartdiseasedetection-2irk.onrender.com/)
+
+No login is required. The app opens directly on the Dashboard.
+
+### Local Setup
+
 ```bash
 # 1. Create and activate a virtual environment (recommended)
 python -m venv venv
