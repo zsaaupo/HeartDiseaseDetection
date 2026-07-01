@@ -36,8 +36,8 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(BASE_DIR, "heart_model.joblib")
 SCALER_PATH = os.path.join(BASE_DIR, "heart_scaler.joblib")
 
-# Exact feature order the model/scaler were fit with. MUST match
-# ml/train_model.py FEATURE_ORDER exactly, in both names and order.
+# Exact feature order the model/scaler were fit with. MUST match the
+# training notebook's feature order exactly, in both names and order.
 FEATURE_ORDER = [
     "Thalassemia",
     "Chest_Pain_Type",
@@ -81,8 +81,8 @@ def _load_artifacts():
     if _model is None or _scaler is None:
         if not os.path.exists(MODEL_PATH) or not os.path.exists(SCALER_PATH):
             raise FileNotFoundError(
-                "Trained model/scaler not found. Run `python ml/train_model.py` "
-                "from the project root before starting the server."
+                "Trained model/scaler not found. Add ml/heart_model.joblib "
+                "and ml/heart_scaler.joblib before starting the server."
             )
         _model = joblib.load(MODEL_PATH)
         _scaler = joblib.load(SCALER_PATH)
